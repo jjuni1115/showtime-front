@@ -5,11 +5,11 @@ const Header = () =>{
         <>
             <Navbar bg="primary" data-bs-theme="dark" className="w-100">
 
-                  <Navbar.Brand href="/home">sns</Navbar.Brand>
+                  <Navbar.Brand href="/home">showtime</Navbar.Brand>
                   <Nav className="me-auto">
                     <Nav.Link href="/">Home</Nav.Link>
-                    <Nav.Link href="/signup">Features</Nav.Link>
-                    <Nav.Link href="#pricing">Pricing</Nav.Link>
+                    <Nav.Link href="/signup">Feature</Nav.Link>
+                    <Nav.Link href="#pricing">프로필</Nav.Link>
                   </Nav>
 
               </Navbar>
