@@ -1,14 +1,34 @@
 import {Button, Card, Container, Form} from "react-bootstrap";
 import useInput from "../../hook/useInput.jsx";
+import api from "../../util/axios.js";
+import {useNavigate, useNavigationType} from "react-router-dom";
 
 const Login = () =>{
 
   const userId = useInput("");
   const userPw = useInput("");
 
-  const login = () =>{
-    console.log(userId.value);
-    console.log(userPw.value)
+  const navigate = useNavigate();
+  const navigationType = useNavigationType();
+
+  const fetchLogin = () =>{
+
+    api.post("/user/login",{
+      userEmail: userId.value,
+      userPassword: userPw.value
+
+    },{skipAuth:true})
+        .then(response => {
+
+          localStorage.setItem("token",response.token);
+
+          navigate("/home");
+
+
+
+        }
+
+        );
   }
 
     return(
@@ -25,7 +45,7 @@ const Login = () =>{
             <Form.Group className="mb-2">
               <Form.Control type="password" placeholder="비밀번호" value={userPw.value} onChange={userPw.handelInputValue} />
             </Form.Group>
-            <Button variant="primary" className="w-100" onClick={login}>로그인</Button>
+            <Button variant="primary" className="w-100" onClick={fetchLogin}>로그인</Button>
           </Form>
 
           <div className="my-2">또는</div>
@@ -44,7 +64,7 @@ const Login = () =>{
         </Card>
 
         <Card className="mt-3 p-3 text-center">
-          계정이 없으신가요? <a href="#" className="text-primary fw-bold">가입하기</a>
+          계정이 없으신가요? <a href="/signup" className="text-primary fw-bold">가입하기</a>
         </Card>
 
       </div>
