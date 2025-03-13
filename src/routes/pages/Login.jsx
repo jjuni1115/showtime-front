@@ -2,6 +2,7 @@ import {Button, Card, Container, Form} from "react-bootstrap";
 import useInput from "../../hook/useInput.jsx";
 import api from "../../util/axios.js";
 import {useNavigate, useNavigationType} from "react-router-dom";
+import {useEffect} from "react";
 
 const Login = () =>{
 
@@ -10,6 +11,13 @@ const Login = () =>{
 
   const navigate = useNavigate();
   const navigationType = useNavigationType();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if(token!==null){
+      navigate("/home");
+    }
+  }, []);
 
   const fetchLogin = () =>{
 
