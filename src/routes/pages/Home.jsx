@@ -1,18 +1,16 @@
 import {useSearchParams} from "react-router-dom";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
+import api from "../../util/axios.js";
 
 const Home = () =>{
 
     const [searchParams] = useSearchParams();
 
+    const [temp,setTemp] = useState("");
+
     useEffect(() => {
 
-        const token = searchParams.get("token");
-
-        if(token){
-            sessionStorage.setItem("token",token);
-            console.log(token);
-        }
+        api.get("/user/test").then(response => setTemp(response));
 
 
     }, []);
@@ -20,6 +18,7 @@ const Home = () =>{
     return(
 <>
     <p>Hello</p>
+    {temp}
 </>
     );
 }
