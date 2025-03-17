@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: "http://localhost:8080",
+    baseURL: "http://localhost:8000",
     headers: {"Content-Type": "application/json"},
     timeout: 5000,
 });
@@ -21,11 +21,11 @@ api.interceptors.response.use((response)=>{
     return response.data.data;
     },
     async (error)=>{
-        if(error.response && (error.response.status === 401 && error.response.data.errorCode === "401002" || error.response.status === 403)){
+        if(error.response && error.response.errorCode && error.response.errorCode === "401002"){
             console.log("UnAuthorized");
 
 
-            await axios.post("http://localhost:8080/user/reissueToken",{},{
+            await axios.post("http://localhost:8000/user-service/user/reissueToken",{},{
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`
                 }
@@ -39,6 +39,9 @@ api.interceptors.response.use((response)=>{
                 window.location.href = "/";
             })
 
+        }else{
+            console.log(error);
+            return Promise.reject(error.response.data);
         }
 
     }

@@ -22,7 +22,8 @@ const Login = () =>{
 
   const fetchLogin = () =>{
 
-    api.post("/user/login",{
+
+    api.post("/user-service/user/login",{
       userEmail: userId.value,
       userPassword: userPw.value
 
@@ -37,7 +38,12 @@ const Login = () =>{
 
         }
 
-        );
+        ).catch(error => {
+
+           alert(error.message);
+
+        }
+    )
   }
 
     return(
@@ -59,7 +65,7 @@ const Login = () =>{
 
           <div className="my-2">또는</div>
 
-          <Button variant="link" className="text-primary fw-bold" onClick={() => window.location.href = "http://localhost:8080/oauth2/authorization/google"}>
+          <Button variant="link" className="text-primary fw-bold" onClick={() => window.location.href = "http://localhost:8000/user-service/oauth2/authorization/google"}>
             <i className="bi bi-facebook"></i> Google로 로그인
           </Button>
 

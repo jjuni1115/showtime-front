@@ -21,7 +21,7 @@ const Register = () => {
 
     const registerUser = () => {
 
-        api.post("/user/register", {
+        api.post("/user-service/user/register", {
             "userEmail": userEmail.value,
             "userPassword": userPassword.value,
             "userName": userName.value,

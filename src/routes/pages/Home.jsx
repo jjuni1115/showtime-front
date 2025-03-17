@@ -10,7 +10,7 @@ const Home = () =>{
 
     useEffect(() => {
 
-        api.get("/user/test").then(response => setTemp(response));
+        api.get("/user-service/user/test").then(response => setTemp(response));
 
 
     }, []);
