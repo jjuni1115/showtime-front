@@ -1,5 +1,16 @@
 import {useNavigate, useNavigationType, useParams, useSearchParams} from "react-router-dom";
-import {Button, ButtonGroup, Card, Container, Form, ToggleButton} from "react-bootstrap";
+import {
+    Button,
+    ButtonGroup,
+    Card,
+    Container,
+
+    Form,
+    InputGroup, ListGroup,
+
+    ToggleButton
+} from "react-bootstrap";
+import { FaSearch, FaTimes } from "react-icons/fa";
 import useInput from "../../hook/useInput.jsx";
 import api from "../../util/axios.js";
 import {useEffect, useState} from "react";
@@ -21,8 +32,42 @@ const Register = () => {
 
     const grade = ["최하","하","중","중상","상","최상"];
 
+
+
     const navigate = useNavigate();
     const navigationType = useNavigationType();
+
+
+    const [locationKeyowrd,setLocationKeyword] = useState("");
+
+    const [locations, setLocations] = useState([]);
+
+    const searchLocation = (e) =>{
+
+        setLocationKeyword(e.target.value);
+
+        //api call
+        setLocations([
+            "경기도 수원시 팔달구 지동",
+            "경기도 화성시 진안동",
+            "경기도 오산시 지곶동",
+            "경기도 용인시 기흥구 지곡동",
+            "경기도 화성시 팔탄면",
+            "경기도 광주시 직동",
+            "경기도 평택시 진위면",
+            "경기도 용인시 처인구 남사면",
+            "경기도 평택시 지산동",
+        ])
+
+
+
+    }
+
+    const clearSearch = () =>{
+        setLocationKeyword("");
+    }
+
+
 
 
     const registerUser = () => {
@@ -44,10 +89,10 @@ const Register = () => {
     }
 
     const nextStep = () => {
-        if(step === 1){
+        if(step === 1 || step === 2){
             setStep(current => current + 1);
-        }else if (step === 2){
-            console.log("register");
+        }else {
+            alert("register");
         }
     }
 
@@ -111,9 +156,46 @@ const Register = () => {
                     </ButtonGroup>
                     </>
                 )}
+                {
+                 step === 3 && (
+                     <>
+                        <p className="text-center">활동 지역을 선택해주세요 (최대 5곳 설정)</p>
+                         <InputGroup className="mb-3">
+                             <InputGroup.Text>
+                                 <FaSearch />
+                             </InputGroup.Text>
+                             <Form.Control
+                                 type="text"
+                                 placeholder="검색"
+                                 value={locationKeyowrd}
+                                 onChange={searchLocation}
+                             />
+                             {locationKeyowrd && (
+                                 <Button variant="light" onClick={clearSearch}>
+                                     <FaTimes />
+                                 </Button>
+                             )}
+                         </InputGroup>
+
+                         <Button variant="warning" className="w-100 mb-3">
+                             현재 위치로 찾기
+                         </Button>
+
+                         <ListGroup>
+                             {locations.map((location, index) => (
+                                 <ListGroup.Item key={index}>{location}</ListGroup.Item>
+                             ))}
+                         </ListGroup>
+
+                     </>
+
+                    )
+                }
 
                 <Button variant="primary" className="w-100" onClick={nextStep}>
-                    가입
+                    {
+                        step === 3 ? "회원가입" : "다음"
+                    }
                 </Button>
             </Card>
 
