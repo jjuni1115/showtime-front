@@ -14,6 +14,7 @@ import { FaSearch, FaTimes } from "react-icons/fa";
 import useInput from "../../hook/useInput.jsx";
 import api from "../../util/axios.js";
 import {useEffect, useState} from "react";
+import useDebounce from "../../hook/useDebounce.jsx";
 
 const Register = () => {
 
@@ -40,24 +41,22 @@ const Register = () => {
 
     const [locationKeyowrd,setLocationKeyword] = useState("");
 
+    const debounceKeyword = useDebounce(locationKeyowrd, 500);
+
     const [locations, setLocations] = useState([]);
 
-    const searchLocation = (e) =>{
+    useEffect(() => {
 
-        setLocationKeyword(e.target.value);
+        if(locationKeyowrd!==null && locationKeyowrd !== "") {
+            api.get(`/user-service/address/${locationKeyowrd}`).then(response => {
+                setLocations(response);
+            })
+            console.log(locations);
+        }
 
-        //api call
-        setLocations([
-            "경기도 수원시 팔달구 지동",
-            "경기도 화성시 진안동",
-            "경기도 오산시 지곶동",
-            "경기도 용인시 기흥구 지곡동",
-            "경기도 화성시 팔탄면",
-            "경기도 광주시 직동",
-            "경기도 평택시 진위면",
-            "경기도 용인시 처인구 남사면",
-            "경기도 평택시 지산동",
-        ])
+    }, [debounceKeyword]);
+
+    const addAddress = (id) => {
 
 
 
@@ -168,7 +167,7 @@ const Register = () => {
                                  type="text"
                                  placeholder="검색"
                                  value={locationKeyowrd}
-                                 onChange={searchLocation}
+                                 onChange={(e) => setLocationKeyword(e.target.value)}
                              />
                              {locationKeyowrd && (
                                  <Button variant="light" onClick={clearSearch}>
@@ -181,9 +180,9 @@ const Register = () => {
                              현재 위치로 찾기
                          </Button>
 
-                         <ListGroup>
-                             {locations.map((location, index) => (
-                                 <ListGroup.Item key={index}>{location}</ListGroup.Item>
+                         <ListGroup style={{ maxHeight: '300px', overflowY: 'auto' }}>
+                             {locations.map((address, index) => (
+                                 <ListGroup.Item key={address.id} onClick={addAddress(address.id)}>{address.address}</ListGroup.Item>
                              ))}
                          </ListGroup>
 
