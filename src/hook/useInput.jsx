@@ -2,16 +2,18 @@ import {useState} from "react";
 
 const useInput = (initialValue,validator) =>{
     const [value,setValue] = useState(initialValue);
+    const [isValid,setIsValid] = useState(true);
     const handelInputValue = (event) =>{
-        const {
-            target: {value}
-        } = event;
-        setValue(value);
+
+        const target = event.target.value;
+
+        setValue(target);
+        if (typeof validator === "function"){
+            setIsValid(validator(target));
+        }
     }
-    if (typeof validator === "function" && validator(value)){
-        setValue(value);
-    }
-    return {value,handelInputValue};
+
+    return {value,handelInputValue,isValid};
 
 }
 
