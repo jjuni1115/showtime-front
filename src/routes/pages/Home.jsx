@@ -1,5 +1,5 @@
 import {useSearchParams} from "react-router-dom";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import api from "../../util/axios.js";
 import {Card, Col, Container, Row, Form} from "react-bootstrap";
 import Game from "../../components/main/Game.jsx";
@@ -10,11 +10,20 @@ const Home = () => {
     const [gameList, setGameList] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [selectedGame, setSelectedGame] = useState();
+    const devRef = useRef(null);
 
     useEffect(() => {
         api.get("/game-service/game").then(response => {
-            setGameList(response); // Ensure you're accessing the correct data structure
+            setGameList(response.content); // Ensure you're accessing the correct data structure
         });
+    }, []);
+
+    useEffect(() => {
+        const divElement = devRef.current;
+        divElement.addEventListener("scroll", handleScroll);
+        return () => {
+            divElement.removeEventListener("scroll", handleScroll);
+        }
     }, []);
 
     const handleGameClick = (game) => {
@@ -24,6 +33,14 @@ const Home = () => {
     }
 
     const handleClose = () => {setShowModal(false)}
+
+    const handleScroll = () => {
+        const { scrollTop, clientHeight, scrollHeight } = devRef.current;
+        if (scrollTop + clientHeight >= scrollHeight) {
+            // Load more data here
+            console.log("Load more data");
+        }
+    }
 
     return (
         <Container>
@@ -38,7 +55,9 @@ const Home = () => {
                     <div>showtime 추천순</div>
                 </Col>
             </Row>
-            <div style={{maxHeight: '500px', overflowY: 'scroll'}}>
+            <div
+                ref={devRef}
+                style={{maxHeight: '500px', overflowY: 'scroll'}}>
                 {gameList.map((game, index) => (
                     <Row key={game.id} className="mb-3">
                         <Col>
