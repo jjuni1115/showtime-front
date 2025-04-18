@@ -4,6 +4,7 @@ import api from "../../util/axios.js";
 import {Card, Col, Container, Row, Form} from "react-bootstrap";
 import Game from "../../components/main/Game.jsx";
 import GameModal from "../../components/main/GameModal.jsx";
+import game from "../../components/main/Game.jsx";
 
 const Home = () => {
     const [searchParams] = useSearchParams();
@@ -11,35 +12,52 @@ const Home = () => {
     const [showModal, setShowModal] = useState(false);
     const [selectedGame, setSelectedGame] = useState();
     const devRef = useRef(null);
+    const [totalCount, setTotalCount] = useState(0);
+    let currPage = 0;
+    let pageSize = 10;
 
     useEffect(() => {
-        api.get("/game-service/game").then(response => {
-            setGameList(response.content); // Ensure you're accessing the correct data structure
-        });
+        getGameList(currPage, pageSize);
     }, []);
 
     useEffect(() => {
         const divElement = devRef.current;
+
+        const handleScroll = () => {
+            const { scrollTop, clientHeight, scrollHeight, id } = devRef.current;
+            console.log(totalCount,currPage,pageSize,id);
+            if ((scrollTop + clientHeight >= scrollHeight) && (totalCount > (currPage+1)*pageSize)) {
+                getGameList(++currPage,pageSize);
+            }
+        }
+
         divElement.addEventListener("scroll", handleScroll);
         return () => {
             divElement.removeEventListener("scroll", handleScroll);
         }
-    }, []);
+    }, [totalCount]);
+
 
     const handleGameClick = (game) => {
-        console.log('click');
         setSelectedGame(game);
         setShowModal(true);
     }
 
-    const handleClose = () => {setShowModal(false)}
+    const modalClose = () => {setShowModal(false)}
 
-    const handleScroll = () => {
-        const { scrollTop, clientHeight, scrollHeight } = devRef.current;
-        if (scrollTop + clientHeight >= scrollHeight) {
-            // Load more data here
-            console.log("Load more data");
-        }
+
+
+    const getGameList = (currPage,pageSize,keyword) => {
+        api.get("/game-service/game",{
+            params:{
+                pageSize: pageSize,
+                currPage: currPage
+            }
+        }).then(response => {
+            setGameList(current => [...current,...response.content]);
+            console.log(response.totalElements);
+            setTotalCount(current => current=response.totalElements);
+        });
     }
 
     return (
@@ -51,15 +69,17 @@ const Home = () => {
             </Row>
             <Row className="mb-3">
                 <Col className="text-end">
-                    <div>전체 2405개</div>
+                    <div>전체 {totalCount}개</div>
                     <div>showtime 추천순</div>
                 </Col>
             </Row>
             <div
                 ref={devRef}
-                style={{maxHeight: '500px', overflowY: 'scroll'}}>
-                {gameList.map((game, index) => (
-                    <Row key={game.id} className="mb-3">
+                style={{ maxHeight: '1000px', minHeight: '100px', overflow: 'scroll' }}
+                id={totalCount}>
+                {gameList.length > 0 &&
+                gameList.map((game, index) => (
+                    <Row key={index} className="mb-3">
                         <Col>
                             <Game
                                 gameName={game.game_name}
@@ -74,11 +94,18 @@ const Home = () => {
                         </Col>
                     </Row>
                 ))}
+                {
+                    gameList.length === 0 && (
+                        <div className="text-center">
+                            <h5>경기가 없습니다.</h5>
+                        </div>
+                    )
+                }
             </div>
 
 
             {selectedGame && (
-                <GameModal show={showModal} handleClose={handleClose} game={selectedGame}/>
+                <GameModal show={showModal} handleClose={modalClose} game={selectedGame}/>
             )}
         </Container>
     );
