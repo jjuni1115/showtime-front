@@ -18,7 +18,7 @@ api.interceptors.request.use((config)=>{
 
 
 api.interceptors.response.use((response)=>{
-    return response.data.data;
+    return response.data;
     },
     async (error)=>{
         if(error.response && error.response.errorCode && error.response.errorCode === "401002"){
@@ -41,7 +41,7 @@ api.interceptors.response.use((response)=>{
 
         }else{
             console.log(error);
-            return Promise.reject(error.response.data);
+            return Promise.reject(error.response);
         }
 
     }

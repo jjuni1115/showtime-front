@@ -1,15 +1,17 @@
 import {useSearchParams} from "react-router-dom";
 import {useEffect, useRef, useState} from "react";
 import api from "../../util/axios.js";
-import {Card, Col, Container, Row, Form} from "react-bootstrap";
+import {Card, Col, Container, Row, Form, Button} from "react-bootstrap";
 import Game from "../../components/main/Game.jsx";
-import GameModal from "../../components/main/GameModal.jsx";
+import GameModal from "../../modal/GameModal.jsx";
 import game from "../../components/main/Game.jsx";
+import GameRegisterModal from "../../modal/GameRegisterModal.jsx";
 
 const Home = () => {
     const [searchParams] = useSearchParams();
     const [gameList, setGameList] = useState([]);
-    const [showModal, setShowModal] = useState(false);
+    const [showDetailModal, setShowDetailModal] = useState(false);
+    const [showRegisterModal, setShowRegisterModal] = useState(false);
     const [selectedGame, setSelectedGame] = useState();
     const devRef = useRef(null);
     const [totalCount, setTotalCount] = useState(0);
@@ -40,10 +42,15 @@ const Home = () => {
 
     const handleGameClick = (game) => {
         setSelectedGame(game);
-        setShowModal(true);
+        setShowDetailModal(true);
     }
 
-    const modalClose = () => {setShowModal(false)}
+    const handleCreateGame = () => {
+        setShowRegisterModal(true);
+    }
+
+    const detailModalClose = () => {setShowDetailModal(false)}
+    const registerModalClose = () => {setShowRegisterModal(false)}
 
 
 
@@ -54,9 +61,9 @@ const Home = () => {
                 currPage: currPage
             }
         }).then(response => {
-            setGameList(current => [...current,...response.content]);
+            setGameList(current => [...current,...response.data.content]);
             console.log(response.totalElements);
-            setTotalCount(current => current=response.totalElements);
+            setTotalCount(current => current=response.data.totalElements);
         });
     }
 
@@ -64,7 +71,8 @@ const Home = () => {
         <Container>
             <Row className="my-4">
                 <Col>
-                    <Form.Control type="text" placeholder="검색어를 입력해주세요"/>
+                    <Form.Control type="text" style={{display: 'inline-block' , width:'90%' , marginRight: '10px' }} placeholder="검색어를 입력해주세요"/>
+                    <Button style={{display: 'inline-block'}} onClick={handleCreateGame}>게임등록</Button>
                 </Col>
             </Row>
             <Row className="mb-3">
@@ -105,8 +113,13 @@ const Home = () => {
 
 
             {selectedGame && (
-                <GameModal show={showModal} handleClose={modalClose} game={selectedGame}/>
+                <GameModal show={showDetailModal} handleClose={detailModalClose} game={selectedGame}/>
             )}
+            {
+                showRegisterModal && (
+                    <GameRegisterModal show={showRegisterModal} handleClose={registerModalClose}></GameRegisterModal>
+                )
+            }
         </Container>
     );
 }

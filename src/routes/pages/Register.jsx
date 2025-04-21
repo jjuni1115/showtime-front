@@ -76,7 +76,7 @@ const Register = () => {
 
         if(locationKeyowrd!==null && locationKeyowrd !== "") {
             api.get(`/user-service/address/${locationKeyowrd}`).then(response => {
-                setLocations(response);
+                setLocations(response.data);
             })
         }
 

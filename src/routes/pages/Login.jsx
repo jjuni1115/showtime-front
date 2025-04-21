@@ -30,7 +30,7 @@ const Login = () =>{
     },{skipAuth:true})
         .then(response => {
 
-          localStorage.setItem("token",response.token);
+          localStorage.setItem("token",response.data.token);
 
           navigate("/home");
 
@@ -40,7 +40,7 @@ const Login = () =>{
 
         ).catch(error => {
 
-           alert(error.message);
+           alert(error.data.message);
 
         }
     )
