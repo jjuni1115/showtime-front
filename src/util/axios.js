@@ -12,7 +12,6 @@ api.interceptors.request.use((config)=>{
         return config;
     }
     config.headers.Authorization = `Bearer ${localStorage.getItem("token")}`;
-    console.log(localStorage.getItem("token"));
     return config;
 })
 
@@ -40,7 +39,6 @@ api.interceptors.response.use((response)=>{
             })
 
         }else{
-            console.log(error);
             return Promise.reject(error.response);
         }
 

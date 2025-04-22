@@ -1,6 +1,15 @@
 import {Button, Modal} from "react-bootstrap";
+import api from "../util/axios.js";
 
 const GameModal = ({show, handleClose, game}) => {
+
+    const entryGaeme = () => {
+        console.log(game.id);
+        api.put(`/game-service/game/entry/${game.id}`).then(response => {
+            alert("참가신청 완료");
+            handleClose();
+        })
+    }
 
 
     return (
@@ -23,7 +32,7 @@ const GameModal = ({show, handleClose, game}) => {
             <Modal.Footer>
 
                 <Button variant='secondary' onClick={handleClose}>닫기</Button>
-                <Button variant='primary'>참가</Button>
+                <Button variant='primary' onClick={entryGaeme}>참가</Button>
 
             </Modal.Footer>
 

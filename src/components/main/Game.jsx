@@ -5,7 +5,8 @@ const Game = ({ gameName, gameType, maxPlayer, minPlayer, address, stadium, game
     return (
         <Card className="mb-3 shadow-sm">
             <Card.Body className="d-flex align-items-center" onClick={onClick} style={{ cursor: 'pointer' }}>
-                <Card.Img src='public/night_court.jpg' style={{ width: '100px', height: '100px', objectFit: 'cover', marginRight: '15px' }} />
+                {gameType === '1' && <Card.Img src='public/night_court.jpg' style={{ width: '100px', height: '100px', objectFit: 'cover', marginRight: '15px' }} />}
+                {gameType === '2' && <Card.Img src='public/showtime.png' style={{ width: '100px', height: '100px', objectFit: 'cover', marginRight: '15px' }} />}
                 <div>
                     <Card.Title>{gameName}</Card.Title>
                     <Card.Text as="div">

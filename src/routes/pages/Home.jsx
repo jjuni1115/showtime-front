@@ -49,8 +49,8 @@ const Home = () => {
         setShowRegisterModal(true);
     }
 
-    const detailModalClose = () => {setShowDetailModal(false)}
-    const registerModalClose = () => {setShowRegisterModal(false)}
+    const detailModalClose = () => {setShowDetailModal(false);}
+    const registerModalClose = () => {setShowRegisterModal(false); setGameList([]); getGameList(0,pageSize);}
 
 
 
@@ -90,6 +90,7 @@ const Home = () => {
                     <Row key={index} className="mb-3">
                         <Col>
                             <Game
+                                id={game.id}
                                 gameName={game.game_name}
                                 gameType={game.gameType}
                                 gameDate={game.gameDate}
