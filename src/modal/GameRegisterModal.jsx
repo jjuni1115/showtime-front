@@ -49,7 +49,7 @@ const GameRegisterModal = ({show, handleClose}) => {
 
             api.post("/game-service/game", {
                 gameName: gameTile.value,
-                content: gameContent.value,
+                content: gameContent,
                 gameType: radioValue,
                 maxPlayers: parseInt(maxPlayers.value),
                 minPlayers: parseInt(minPlayers.value),

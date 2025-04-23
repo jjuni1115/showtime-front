@@ -20,7 +20,8 @@ api.interceptors.response.use((response)=>{
     return response.data;
     },
     async (error)=>{
-        if(error.response && error.response.errorCode && error.response.errorCode === "401002"){
+        console.log(error.response);
+        if(error.response && error.response.data.errorCode && error.response.data.errorCode === "401002"){
             console.log("UnAuthorized");
 
 
