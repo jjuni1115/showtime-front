@@ -1,5 +1,6 @@
 import {Button, Modal} from "react-bootstrap";
 import api from "../util/axios.js";
+import error from "eslint-plugin-react/lib/util/error.js";
 
 const GameModal = ({show, handleClose, game}) => {
 

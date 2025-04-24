@@ -6,10 +6,17 @@ import Game from "../../components/main/Game.jsx";
 import GameModal from "../../modal/GameModal.jsx";
 import game from "../../components/main/Game.jsx";
 import GameRegisterModal from "../../modal/GameRegisterModal.jsx";
+import useInput from "../../hook/useInput.jsx";
+import useDebounce from "../../hook/useDebounce.jsx";
 
 const Home = () => {
     const [searchParams] = useSearchParams();
     const [gameList, setGameList] = useState([]);
+
+
+
+
+    const keyword = useInput("");
     const [showDetailModal, setShowDetailModal] = useState(false);
     const [showRegisterModal, setShowRegisterModal] = useState(false);
     const [selectedGame, setSelectedGame] = useState();
@@ -17,6 +24,8 @@ const Home = () => {
     const [totalCount, setTotalCount] = useState(0);
     let currPage = 0;
     let pageSize = 10;
+
+    const debounceKeyword = useDebounce(keyword.value, 500);
 
     useEffect(() => {
         getGameList(currPage, pageSize);
@@ -39,6 +48,15 @@ const Home = () => {
         }
     }, [totalCount]);
 
+    useEffect(() => {
+
+        if(keyword.value!==null && keyword.value !== "") {
+            setGameList([]);
+            getGameList(currPage,pageSize,keyword.value);
+        }
+
+    }, [debounceKeyword]);
+
 
     const handleGameClick = (game) => {
         setSelectedGame(game);
@@ -58,7 +76,8 @@ const Home = () => {
         api.get("/game-service/game",{
             params:{
                 pageSize: pageSize,
-                currPage: currPage
+                currPage: currPage,
+                keyword: keyword
             }
         }).then(response => {
             setGameList(current => [...current,...response.data.content]);
@@ -71,7 +90,7 @@ const Home = () => {
         <Container>
             <Row className="my-4">
                 <Col>
-                    <Form.Control type="text" style={{display: 'inline-block' , width:'90%' , marginRight: '10px' }} placeholder="검색어를 입력해주세요"/>
+                    <Form.Control type="text" style={{display: 'inline-block' , width:'90%' , marginRight: '10px' }} placeholder="검색어를 입력해주세요" value={keyword.value} onChange={keyword.handelInputValue}/>
                     <Button style={{display: 'inline-block'}} onClick={handleCreateGame}>게임등록</Button>
                 </Col>
             </Row>
@@ -91,7 +110,7 @@ const Home = () => {
                         <Col>
                             <Game
                                 id={game.id}
-                                gameName={game.game_name}
+                                gameName={game.gameName}
                                 gameType={game.gameType}
                                 gameDate={game.gameDate}
                                 maxPlayer={game.maxPlayer}
@@ -99,6 +118,7 @@ const Home = () => {
                                 address={game.address}
                                 stadium={game.stadium}
                                 onClick={() => handleGameClick(game)}
+                                keyword={keyword.value}
                             />
                         </Col>
                     </Row>

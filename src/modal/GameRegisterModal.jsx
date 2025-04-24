@@ -51,21 +51,18 @@ const GameRegisterModal = ({show, handleClose}) => {
                 gameName: gameTile.value,
                 content: gameContent,
                 gameType: radioValue,
-                maxPlayers: parseInt(maxPlayers.value),
-                minPlayers: parseInt(minPlayers.value),
+                maxPlayer: parseInt(maxPlayers.value),
+                minPlayer: parseInt(minPlayers.value),
                 address: gameLocation,
                 stadium: stadium.value,
                 gameDate: gameDate.value.replaceAll("-", "") + " " + gameTime.value,
             }).then((response) => {
-
                     alert("게임 등록 완료");
                     handleClose();
 
-            }).catch(
-                (error) => {
-                    alert("게임 등록 실패 : "+error.data.message);
-                }
-            );
+            }).catch((error) => {
+                alert("게임 등록 실패 : "+error.response.data.message);
+            });
         }
     };
 

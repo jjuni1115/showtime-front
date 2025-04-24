@@ -39,8 +39,10 @@ api.interceptors.response.use((response)=>{
                 window.location.href = "/";
             })
 
-        }else{
-            return Promise.reject(error.response);
+        }
+        else{
+            alert(error.response.data.message);
+            //return Promise.reject(error);
         }
 
     }
