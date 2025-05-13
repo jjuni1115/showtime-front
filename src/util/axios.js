@@ -4,6 +4,7 @@ const api = axios.create({
     baseURL: "http://localhost:8000",
     headers: {"Content-Type": "application/json"},
     timeout: 5000,
+    withCredentials: true,
 });
 
 
@@ -34,8 +35,9 @@ api.interceptors.response.use((response)=>{
                 error.config.headers.Authorization = `Bearer ${response.data.data.accessToken}`;
                 return axios.request(error.config);
             }).catch(error => {
-                console.log("reiisue token error");
+                console.log("reissue token error");
                 localStorage.removeItem("token");
+                alert("로그인 세션이 만료되었습니다. 다시 로그인 해주세요.");
                 window.location.href = "/";
             })
 
