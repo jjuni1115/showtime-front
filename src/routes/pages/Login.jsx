@@ -43,7 +43,7 @@ const Login = () =>{
       userEmail: userId.value,
       userPassword: userPw.value
 
-    },{skipAuth:true})
+    },{skipAuth:true, withCredentials:true})
         .then(response => {
 
           localStorage.setItem("token",response.data.token);

@@ -26,10 +26,10 @@ api.interceptors.response.use((response)=>{
             console.log("UnAuthorized");
 
 
-            await axios.post("http://localhost:8000/user-service/user/reissueToken",{},{
+            await axios.get("http://localhost:8000/user-service/user/reissueToken",{},{
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`
-                }
+                }, withCredentials: true
             }).then(response => {
                 localStorage.setItem("token",response.data.data.token);
                 error.config.headers.Authorization = `Bearer ${response.data.data.accessToken}`;
