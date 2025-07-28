@@ -47,6 +47,7 @@ const Login = () =>{
         .then(response => {
 
           localStorage.setItem("token",response.data.token);
+          localStorage.setItem("userEmail",userId.value);
 
           navigate("/home");
 

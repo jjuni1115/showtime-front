@@ -2,8 +2,8 @@ import {Button, Modal} from "react-bootstrap";
 import api from "../util/axios.js";
 
 const GameModal = ({show, handleClose, game}) => {
-    const currentUserId = sessionStorage.getItem('userId');
-    const isHost = game.createUserId === currentUserId;
+    const currentUserEmail = localStorage.getItem('userEmail');
+    const isHost = game.createUser.userEmail === currentUserEmail;
 
     const entryGaeme = () => {
         api.put(`/game-service/game/entry/${game.id}`).then(() => {
@@ -37,18 +37,18 @@ const GameModal = ({show, handleClose, game}) => {
                 <div><strong>주소:</strong> {game.address} {game.stadium}</div>
                 <div><strong>모집 인원:</strong> {game.maxPlayer}</div>
                 <div><strong>게임일자:</strong> {game.gameDate}</div>
-                <div><strong>생성자:</strong> {game.createUserName}</div>
+                <div><strong>호스트:</strong> {game.createUser.userName}</div>
 
                 <hr />
-                <h5>확정된 참가자</h5>
+                <h5>참가자</h5>
                 {game.players && game.players.length > 0 ? (
                     <ul className="list-group">
                         {game.players.map(player => (
-                            <li key={player.userId} className="list-group-item">{player.username}</li>
+                            <li key={player.userId} className="list-group-item">{player.userName}</li>
                         ))}
                     </ul>
                 ) : (
-                    <p>확정된 참가자가 없습니다.</p>
+                    <p>참가자가 없습니다.</p>
                 )}
 
                 {isHost && (
@@ -57,10 +57,14 @@ const GameModal = ({show, handleClose, game}) => {
                         <h5>참가 대기자 목록</h5>
                         {game.waitingPlayers && game.waitingPlayers.length > 0 ? (
                             <ul className="list-group">
-                                {game.waitingPlayers.map(waitingUserId => (
-                                    <li key={waitingUserId} className="list-group-item d-flex justify-content-between align-items-center">
-                                        {waitingUserId} 
-                                        <Button variant="success" size="sm" onClick={() => approvePlayer(waitingUserId)}>승인</Button>
+                                {game.waitingPlayers.map(waitingPlayer => (
+                                    <li key={waitingPlayer.userEmail} className="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <strong>{waitingPlayer.userName}</strong> ({waitingPlayer.userNickName})
+                                            <br />
+                                            <small className="text-muted">{waitingPlayer.userEmail}</small>
+                                        </div>
+                                        <Button variant="success" size="sm" onClick={() => approvePlayer(waitingPlayer.userEmail)}>승인</Button>
                                     </li>
                                 ))}
                             </ul>
