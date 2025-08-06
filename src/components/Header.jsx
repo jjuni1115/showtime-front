@@ -22,6 +22,7 @@ const Header = () => {
             <Navbar.Brand href="/home">showtime</Navbar.Brand>
             <Nav className="me-auto">
                 <Nav.Link href="/">Home</Nav.Link>
+                <Nav.Link href="/my-game">나의게임</Nav.Link>
                 <Nav.Link href="/signup">Feature</Nav.Link>
             </Nav>
             <Nav className="ms-auto">

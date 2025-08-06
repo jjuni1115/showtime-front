@@ -4,6 +4,7 @@ import Home from "./pages/Home.jsx";
 import Navbar from "./layouts/Navbar.jsx"
 import Login from "./pages/Login.jsx"
 import OauthLogin from "./pages/OauthLogin.jsx";
+import MyGame from "./pages/myGame.jsx";
 
 
 const router = createBrowserRouter([
@@ -14,6 +15,10 @@ const router = createBrowserRouter([
             {
                 path: "/home",
                 element: <Home/>
+            },
+            {
+                path: "/my-game",
+                element: <MyGame />
             }
         ]
     }, {
