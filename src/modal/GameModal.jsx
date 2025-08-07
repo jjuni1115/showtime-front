@@ -83,7 +83,7 @@ const GameModal = ({show, handleClose, game}) => {
                                     <strong>{player.userName}</strong> ({player.nickName})
                                     <br />
                                 </div>
-                                <Button variant="danger" size="sm" onClick={() => deletePlayer(player.userId)}>삭제</Button>
+                                {isHost && <Button variant="danger" size="sm" onClick={() => deletePlayer(player.userId)}>삭제</Button>}
                             </li>
                         ))}
                     </ul>
