@@ -1,7 +1,7 @@
 import {useSearchParams} from "react-router-dom";
 import {useEffect, useRef, useState} from "react";
 import api from "../../util/axios.js";
-import {Card, Col, Container, Row, Form, Button} from "react-bootstrap";
+import {Card, Col, Container, Row, Form, Button, Spinner} from "react-bootstrap";
 import Game from "../../components/main/Game.jsx";
 import GameModal from "../../modal/GameModal.jsx";
 import game from "../../components/main/Game.jsx";
@@ -12,6 +12,7 @@ import useDebounce from "../../hook/useDebounce.jsx";
 const Home = () => {
     const [searchParams] = useSearchParams();
     const [gameList, setGameList] = useState([]);
+    const [loading, setLoading] = useState(false);
 
 
 
@@ -73,6 +74,7 @@ const Home = () => {
 
 
     const getGameList = (currPage,pageSize,keyword) => {
+        setLoading(true);
         api.get("/game-service/game",{
             params:{
                 pageSize: pageSize,
@@ -80,9 +82,12 @@ const Home = () => {
                 keyword: keyword
             }
         }).then(response => {
+            console.log(response);
             setGameList(current => [...current,...response.data.content]);
             console.log(response.totalElements);
             setTotalCount(current => current=response.data.totalElements);
+        }).finally(() => {
+            setLoading(false);
         });
     }
 
@@ -124,7 +129,16 @@ const Home = () => {
                     </Row>
                 ))}
                 {
-                    gameList.length === 0 && (
+                    loading && gameList.length === 0 && (
+                        <div className="text-center">
+                            <Spinner animation="border" role="status">
+                                <span className="visually-hidden">Loading...</span>
+                            </Spinner>
+                        </div>
+                    )
+                }
+                {
+                    !loading && gameList.length === 0 && (
                         <div className="text-center">
                             <h5>경기가 없습니다.</h5>
                         </div>
